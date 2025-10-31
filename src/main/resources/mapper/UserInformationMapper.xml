@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC
+        "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sm.graduation.userInformation.dao.UserInformationMapper">
+
+<!--    property对应实体类的字段 column对应数据库中的字段-->
+    <resultMap id="userInformation" type="com.sm.graduation.userInformation.pojo.UserInfomation">
+        <id property="id" column="id" />
+        <result property="olderName" column="older_name"></result>
+        <result property="olderSex" column="older_sex"></result>
+        <result property="olderIdcard" column="older_idcard"></result>
+        <result property="medication" column="medication"></result>
+        <result property="dischargeTime" column="discharge_time"></result>
+        <result property="cost" column="cost"></result>
+
+    </resultMap>
+    <insert id="addUserInfo">
+        INSERT INTO user_information
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="olderId !=null">
+                    older_id,
+                </if>
+            <if test="medicationId !=null">
+                medication_id,
+            </if>
+            <if test="dischargeTime !=null">
+                discharge_time,
+            </if>
+            <if test="cost">
+                cost
+            </if>
+            </trim>
+            <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+                <if test="olderId !=null">
+                    #{olderId},
+                </if>
+                <if test="medicationId !=null">
+                   #{medicationId},
+                </if>
+                <if test="dischargeTime !=null">
+                    #{dischargeTime},
+                </if>
+                <if test="cost">
+                    #{cost}
+                </if>
+            </trim>
+    </insert>
+<!--    编辑修改-->
+    <update id="updateById">
+        UPDATE user_information
+        <trim prefix="set" suffixOverrides=",">
+            <if test="olderId">
+                older_id=#{olderId} ,
+            </if>
+            <if test="medicationId">
+                medication_id=#{medicationId},
+            </if>
+        <if test="dischargeTime">
+            discharge_time=#{dischargeTime},
+        </if>
+            <if test="cost">
+                cost=#{cost}
+            </if>
+        </trim>
+        WHERE id =#{id}
+    </update>
+<!--    删除-->
+    <delete id="deleteById">
+        DELETE FROM user_information WHERE id = #{id}
+    </delete>
+
+    <select id="selectByAll" resultType="com.sm.graduation.userInformation.pojo.UserInfomation" resultMap="userInformation">
+        SELECT o.older_id,o.older_name,o.older_sex,o.older_idcard,u.discharge_time,u.cost,m.medication
+        FROM user_information u
+                 LEFT JOIN older_info o
+                           ON u.older_id = o.older_id
+                 LEFT JOIN medication m
+                           ON u.medication_id = m.id
+--         模糊查询
+        <where>
+            <if test="olderName !=''">
+                o.older_name like concat("%",#{olderName},"%")
+            </if>
+        <if test="dischargeTime !=''">
+         and   u.discharge_time =#{dischargeTime}
+        </if>
+        </where>
+        ORDER BY u.id DESC
+    </select>
+    <select id="selectB" resultType="com.sm.graduation.userInformation.pojo.UserInfomation">
+        SELECT u.id,o.older_id,o.older_name,o.older_sex,o.older_idcard,u.discharge_time,u.cost,m.medication
+        FROM user_information u
+                 LEFT JOIN older_info o
+                           ON u.older_id = o.older_id
+                 LEFT JOIN medication m
+                           ON u.medication_id = m.id
+        ORDER BY u.id DESC
+    </select>
+
+    <select id="selectByUser" resultType="com.sm.graduation.userInformation.pojo.UserReq">
+-- 取别名
+        SELECT older_id olderId,older_name olderName FROM older_info
+    </select>
+    <select id="selectBYmedication" resultType="com.sm.graduation.userInformation.pojo.UserReq">
+        SELECT id medicationId,medication medicationName FROM medication
+    </select>
+<!--    编辑-->
+    <select id="selectById" resultType="com.sm.graduation.userInformation.pojo.UserInfomation">
+-- 多表查询与前端不一样的名字要取别名
+        SELECT u.id,o.older_name olderName,m.medication,
+               u.discharge_time dischargeTime,u.cost
+        FROM user_information u
+                 LEFT JOIN older_info o
+                           ON u.older_id=o.older_id
+                 LEFT JOIN medication m
+                           ON u.medication_id=m.id
+        WHERE u.id=#{id}
+    </select>
+</mapper>

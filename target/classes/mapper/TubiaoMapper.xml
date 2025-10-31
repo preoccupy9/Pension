@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sm.graduation.tubiao.dao.TubiaoMapper">
+
+    <select id="selectByolderSex" resultType="java.lang.String">
+        SELECT older_sex olderSex FROM older_info GROUP BY older_sex
+
+    </select>
+
+
+    <select id="selectByNumber" resultType="java.lang.Integer">
+        SELECT COUNT(*) number FROM older_info GROUP BY older_sex
+    </select>
+
+    <select id="selectByTwo" resultType="com.sm.graduation.tubiao.pojo.ToTwo">
+        SELECT high_case name,COUNT(*) value FROM high_risk GROUP BY high_case
+    </select>
+
+
+</mapper>

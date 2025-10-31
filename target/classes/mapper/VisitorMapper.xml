@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sm.graduation.visitor.dao.VisitorMapper">
+
+
+
+    <select id="selectByAll" resultType="com.sm.graduation.visitor.pojo.Visitor">
+        SELECT id,`name`,target,vi_time,recorders FROM visitor
+        <where>
+            <if test="name != null">
+                `name` LIKE concat ("%",#{name},"%")
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+
+    <insert id="insertByAll">
+        INSERT INTO visitor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="target != null">
+                target,
+            </if>
+            <if test="viTime != null">
+                vi_time,
+            </if>
+            <if test="recorders != null">
+                recorders
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="target != null">
+                #{target},
+            </if>
+            <if test="viTime != null">
+                #{viTime},
+            </if>
+            <if test="recorders != null">
+                #{recorders}
+            </if>
+        </trim>
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,32 @@
+<div class="layui-form-item">
+    <label class="layui-form-label required">选择用户</label>
+    <div class="layui-input-block">
+        <select id="user-select" name="olderId" >
+            <option value="">请选择您要录入的用户信息</option>
+        </select>
+    </div>
+</div>
+
+<div class="layui-form-item" >
+    <label class="layui-form-label required" >选择药品</label>
+    <div class="layui-input-block">
+        <select id="medication-select" name="medicationId">
+            <option value="">请选择该用户使用的药品信息</option>
+        </select>
+    </div>
+</div>
+
+<div class="layui-form-item" >
+    <label class="layui-form-label required" >出院时间</label>
+    <div class="layui-input-block">
+        <input type="text" name="dischargeTime" lay-verify="required" placeholder="请输入出院时间" th:value="${userInformationuu.dischargeTime}" value="" class="layui-input">
+    </div>
+</div>
+
+<div class="layui-form-item" >
+    <label class="layui-form-label required" >饮食费用</label>
+    <div class="layui-input-block">
+        <input type="text" name="cost" lay-verify="required" placeholder="请输入饮食费用" th:value="${userInformationuu.cost}" value="" class="layui-input">
+    </div>
+    <input type="hidden" name="id" th:value="${userInformationuu.id}">
+</div>

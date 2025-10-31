@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="commom::title('添加管理员')"></head>
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layui-form-pane">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">选择用户</label>
+        <div class="layui-input-block">
+            <select id="user-select" name="olderId">
+                <option value="">请选择您要录入的用户信息</option>
+                <option th:each="user : ${user}"
+                        th:value="${user.olderId}"
+                        th:text="${user.olderName}"
+                        th:selected="${user.olderName == userInformationuu.olderName}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item" >
+        <label class="layui-form-label required" >选择药品</label>
+        <div class="layui-input-block">
+            <select id="medication-select" name="medicationId" >
+                <option value="">请选择该用户使用的药品信息</option>
+                <!-- 假设从后端获取的药品列表为 medications -->
+                <option th:each="medication : ${medication}"
+                        th:value="${medication.medicationId}"
+                        th:text="${medication.medicationName}"
+                        th:selected="${medication.medicationName == userInformationuu.medication}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item" >
+        <label class="layui-form-label required" >出院时间</label>
+        <div class="layui-input-block">
+            <input type="text" name="dischargeTime" lay-verify="required" placeholder="请输入出院时间" th:value="${userInformationuu.dischargeTime}" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item" >
+        <label class="layui-form-label required" >饮食费用</label>
+        <div class="layui-input-block">
+            <input type="text" name="cost" lay-verify="required" placeholder="请输入饮食费用" th:value="${userInformationuu.cost}" value="" class="layui-input">
+        </div>
+        <input type="hidden" name="id" th:value="${userInformationuu.id}">
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block" >
+            <button class="layui-btn layui-btn-normal" style="width: 80%"  lay-submit lay-filter="altBtn">确认修改</button>
+        </div>
+    </div>
+</div>
+<script th:src="@{/static/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form','layer'], function () {
+        const form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+
+        form.on('submit(altBtn)', function (data) {
+            $.ajax({
+                url:'/root/modifyis',
+                data:data.field,
+                dataType:'json',
+                type:'post',
+                success:function (data) {
+                    if (data.code==200){
+                        layer.msg(data.msg,{icon:1});
+                    }else{
+                        layer.msg(data.msg,{icon:2});
+                    }
+                    setTimeout(function () {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                        window.parent.location.reload();
+                    }, 1000);
+                }
+            })
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>
